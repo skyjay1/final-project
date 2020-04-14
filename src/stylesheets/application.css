@@ -1,7 +1,6 @@
-@import url('~normalize.css/normalize.css');
-
-* {
-  box-sizing: border-box;
-}
+@import url("~bootstrap/dist/css/bootstrap.css");
 
 /* TODO */
+.canvas-container {
+  height: 100%;
+}
