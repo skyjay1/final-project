@@ -55,7 +55,6 @@ let resetCanvas = function(cvs, context, style) {
 //////////////
 // PAINTERS //
 //////////////
-let rePrepare = false
 
 /////////////////////
 //// ORB PAINTER ////
@@ -92,7 +91,7 @@ let drawOrb = function(cvs, ctx, orb) {
 }
 let updateBallVelocity = function(cvs, ctx, orb) {
   let vel = orb.vX * orb.vX + orb.vY + orb.vY
-  let ratio = 1.0
+  let ratio = 1.000
   const min = 0.001
   const max = 2.0
   if(vel < Math.pow(min, 2)) {
@@ -190,8 +189,8 @@ let orbPainter = {
 //// MATRIX PAINTER ////
 ////////////////////////
 let matrices = []
-let matrixBG = '#222'
-let matrixText = '#66ff66'
+let matrixBGColor = '#222'
+let matrixTextColor = '#66ff66'
 const textSize = 11
 const textStartY = -500
 const numChangeChance = 0.1
@@ -214,7 +213,7 @@ let makeMatrix = function(cvs, ctx, atTop) {
 let drawMatrix = function(cvs, ctx, m) {
   let fontSize = Math.ceil(textSize * m.d)
   ctx.font = fontSize + 'px Courier'
-  ctx.shadowColor = matrixText
+  ctx.shadowColor = matrixTextColor
   ctx.shadowBlur = m.d * 5
   // go through each character and randomly change some of them
   let newText = ''
@@ -223,18 +222,16 @@ let drawMatrix = function(cvs, ctx, m) {
   }
   m.t = newText
   // draw each character
-  for(let j = 0; j < m.l; j++) {
-    if(j == m.l - 1) {
-      ctx.font = 'bold ' + ctx.font
-      ctx.fillStyle = matrixText
-      ctx.shadowBlur = m.d * 10
-    } else {
-      let alpha = Math.ceil((j + 2) * 13)
-      ctx.fillStyle = matrixText + alpha.toString(16)
-    }
+  for(let j = 0; j < m.l - 1; j++) {
+    let alpha = Math.ceil((j + 2) * 13)
+    ctx.fillStyle = matrixTextColor + alpha.toString(16)
     ctx.fillText(m.t.charAt(j), m.x, m.y + (fontSize * j))
-    
   }
+  // draw the last character slightly different
+  ctx.font = 'bold ' + ctx.font
+  ctx.fillStyle = matrixTextColor
+  ctx.shadowBlur = m.d * 10
+  ctx.fillText(m.t.charAt(m.l - 1), m.x, m.y + (fontSize * (m.l - 1)))
 }
 
 // the actual matrix painter
@@ -278,22 +275,164 @@ let matrixPainter = {
 ///////////////////////
 //// SCENE PAINTER ////
 ///////////////////////
-let scrollX = 0//Math.ceil(rand() * 100)
-let groundY = 68
-let groundImg = new Image()
-//groundImg.src = 'https://storage.needpix.com/rsynced_images/soil-575641_1280.png'
+let skyColors = [ '#87CEFA', '#F0F8FF' ]
+let groundColors = [ '#6E441F', '#422A15' ]
+let trees = []
+let numTrees = 24 // TODO link to form
+let numTreeLayers = 5 // TODO link to form
+let groundHeight = 0
+let clouds = []
+const cloudW = 50
+const cloudH = 20
+const cloudChance = 0.004
+let cloudSpeed = 0.1
+let birds = []
+const birdW = 2
+const birdSpeed = 0.6
+const birdChance = 0.005 // TODO link to form
+
+// functions we will use
+let drawSky = function(cvs, ctx) {
+  let c = ctx.createLinearGradient(0, 0, 0, cvs.height)
+  c.addColorStop(0, skyColors[0])
+  c.addColorStop(1, skyColors[1])
+  ctx.fillStyle = c
+  ctx.fillRect(0, 0, cvs.width, cvs.height)
+}
+let drawGround = function(cvs, ctx) {
+  let c = ctx.createLinearGradient(0, 0, 0, cvs.height)
+  c.addColorStop(0, groundColors[0])
+  c.addColorStop(1, groundColors[1])
+  ctx.fillStyle = c
+  ctx.fillRect(0, cvs.height - groundHeight, cvs.width, groundHeight)
+}
+let drawTree = function(cvs, ctx, x, y, bg) {
+  let tw = 20 // trunk width
+  let th = 20 // trunk height
+  let lw = 40 // leaf width
+  let lh = 80 // leaf height
+  let lx = ((lw - tw) / 2) // bottom left x
+  // draw trunk
+  ctx.fillStyle = '#5e4026'
+  ctx.fillRect(x, y - th, tw, th)
+  ctx.fillStyle = bg ? 'forestgreen' : 'darkgreen'
+  ctx.beginPath();
+  ctx.moveTo(x - lx, y - th);
+  ctx.lineTo(x + tw / 2, y - th - lh);
+  ctx.lineTo(x + tw + lx, y - th);
+  ctx.fill();
+}
+let drawTrees = function(cvs, ctx) {
+  for(let h = 0; h < numTreeLayers; h++) {
+    for(let i = 0; i < numTrees; i++) {
+      let sectionHeight = (groundHeight + 50) / numTreeLayers
+      let x = (cvs.width / (numTrees - 3 * (h % 3))) * i
+      let y = (cvs.height - groundHeight + sectionHeight * h) + (trees[h][i] % sectionHeight)
+      drawTree(cvs, ctx, x, y, h % 2 == 1)
+    }
+  }
+}
+let makeBird = function(cvs) {
+  let posY = 1000 * Math.random()
+  return { x: 0, y: posY }
+}
+let drawBird = function(cvs, ctx, b) {
+  let by = 10 + b.y % Math.floor(cvs.height - groundHeight - 100)
+  ctx.fillStyle = 'black'
+  ctx.beginPath()
+  ctx.moveTo(b.x, by)
+  ctx.arc(b.x, by, birdW, 0, 2 * Math.PI)
+  ctx.fill()
+  ctx.beginPath()
+  const wingSpeed = 0.6
+  const wingSpan = birdW * 2.5
+  let wingY = by + Math.sin(b.x * wingSpeed) * wingSpan
+  ctx.moveTo(b.x - wingSpan, wingY)
+  ctx.lineTo(b.x, by)
+  ctx.lineTo(b.x + wingSpan, wingY)
+  ctx.stroke()
+}
+let drawBirds = function(cvs, ctx) {
+  for(let i in birds) {
+    birds[i].x += birdSpeed
+    // remove birds that are no longer on the screen
+    if(birds[i].x + birdW > cvs.width) {
+      birds.splice(i, 1)
+    }
+  }
+  for(let i in birds) {
+    drawBird(cvs, ctx, birds[i])
+  }
+}
+let makeCloud = function(cvs, atRight) {
+  let width = cloudW + Math.floor(20 * Math.random())
+  let height = cloudH + Math.floor(30 * Math.random())
+  let posX = atRight ? cvs.width + width : Math.floor(Math.random() * cvs.width)
+  let posY = 1000 * Math.random()
+  // build the cloud object
+  return { x: posX, y: posY, w: width, h: height }
+}
+let drawCloud = function(cvs, ctx, cl) {
+  ctx.fillStyle = '#ffffffaa'
+  ctx.beginPath()
+  ctx.moveTo(cl.x, cl.y)
+  ctx.ellipse(cl.x, cl.y % (cvs.height - groundHeight - cloudH), cl.w, cl.h, 0, 0, 2 * Math.PI)
+  ctx.fill()
+}
+let drawClouds = function(cvs, ctx) {
+  for(let i in clouds) {
+    clouds[i].x -= (cloudSpeed * (1 + clouds[i].y % 3))
+    // remove clouds that are no longer on the screen
+    if(clouds[i].x + clouds[i].w * 2 < 0) {
+      clouds.splice(i, 1)
+    }
+  }
+  for(let i in clouds) {
+    drawCloud(cvs, ctx, clouds[i])
+  }
+}
+
+
 
 // the actual painter
 let scenePainter = {
   prepare: function(cvs, ctx) {
-    resetCanvas(cvs, ctx, '#222')
-    //ctx.drawImage(groundImg, scrollX, groundY, 128, 68)
-    // TODO
+    resetCanvas(cvs, ctx, 'white')
+    // add trees
+    for(let i = 0; i < numTreeLayers; i++) {
+      let tarray = []
+      for(let j = 0; j < numTrees; j++) {
+        let y = 1000 * Math.random()
+        tarray.push(y)
+      }
+      trees.push(tarray)
+    }
+    // add clouds
+    for(let i = 0; i < 8; i++) {
+      clouds.push(makeCloud(cvs, false))
+    }
+    birds.push(makeBird(cvs))
   },
   tick: function(cvs, ctx) {
-    resetCanvas(cvs, ctx, '#222')
-    // TODO
-    scrollX += 1
+    resetCanvas(cvs, ctx, 'white')
+    // update how much space is taken up by the ground
+    groundHeight = (cvs.height * 1) / 3
+    drawSky(cvs, ctx)
+    // move and draw clouds
+    drawClouds(cvs, ctx)
+    // move and draw birds
+    drawBirds(cvs, ctx)
+    // draw ground and trees
+    drawGround(cvs, ctx)
+    drawTrees(cvs, ctx)
+    // occasionally add clouds
+    if(Math.random() < cloudChance) {
+      clouds.push(makeCloud(cvs, true))
+    }
+    // occasionally add birds
+    if(Math.random() < birdChance) {
+      birds.push(makeBird(cvs))
+    }
   },
   onFormChange: function(event) {
     // TODO
