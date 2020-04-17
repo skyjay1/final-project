@@ -160,7 +160,12 @@ orb1.vY += (orb1.y - orb2.y) * ratio</pre>
         <p>Here, the painter updates the position of each "matrix" and then draws its text to the screen. The depth is used to determine both the text size to use and the speed at which the matrix object "falls" toward the bottom of the screen.</p>
         <p>While drawing each matrix, every character in its text has a random chance to be changed, which gives the "flickering" effect. The other effects, like the fading colors and eerie glow, are simply text shadows and transparent colors.</p>
         <code>onFormChange</code>
-        <p>// TODO</p>
+        <p>The matrix screensaver has a few customizable properties:</p>
+        <ol>
+          <li>The color of the background</li>
+          <li>The color of the text</li>
+          <li>The randomness of number flickering</li>
+        </ol>
       </div>
     </div>
     <!-- SCENE -->
@@ -212,9 +217,16 @@ let wingY = bird.y + Math.sin(bird.x * wingSpeed) * wingSpan</pre>
         </canvas>
         <p>This is an animation trick I learned from my 3d object modeling experience, where the <code>wingSpeed</code> affects how long it takes for the sin function to complete and the <code>wingSpan</code> affects how large of an angle is generated.</p>
         <p>To create a smooth animation, I just need to give it a number that constantly increases. In this case, the bird's x-position works nicely.</p>
+        <code>onFormChange</code>
+        <p>When a form changes, the screensaver updates the following properties:</p>
+        <ol>
+          <li>The number of trees in each row</li>
+          <li>The number of rows of trees</li>
+          <li>The percent chance that a bird will appear every tick</li>
+        </ol>
+        <p>If the user turns that last option up all the way, they get a locust-like swarm of birds that darkens the sky. Pretty scary stuff.</p>
       </div>
     </div>
-
   </div>
 
 

@@ -49,7 +49,7 @@ function insertFooter() {
   if(footer) {
     footer.innerHTML = `
     <hr class="my-3 bg-light">
-    <img src="./images/skyjay1-logo.png" class="d-block mx-auto" style="max-width: 75px;" alt="Skyjay1 Logo">
+    <a href="https://icarus.cs.weber.edu/~sj57573/"><img src="skyjay1-logo.png" class="d-block mx-auto" style="max-width: 75px;" alt="Skyjay1 Logo"></a>
     <p class="mxw-75 mx-auto" style="max-width: 75px;">&copy; 2020</p>
     `
     console.log('inserted footer element')
