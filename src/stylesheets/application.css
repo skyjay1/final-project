@@ -4,3 +4,25 @@
 .canvas-container {
   height: 100%;
 }
+
+.carousel-caption a {
+  color: white; 
+  outline-color: 'black';
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#jumbotron-welcome {
+  background-image: url("https://images.unsplash.com/photo-1547394765-185e1e68f34e");
+  background-size: 1280px;
+  background-position-y: center;
+  background-position-x: right;
+  background-blend-mode: overlay;
+}
+
+#jumbotron-about {
+  background-image: url("https://images.unsplash.com/photo-1510915228340-29c85a43dcfe");
+  background-size: 1280px;
+  background-position: center;
+  background-blend-mode: overlay;
+}

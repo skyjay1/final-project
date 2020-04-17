@@ -12,8 +12,61 @@
     <!-- Added by Javascript -->
   </header>
 
-  <h1>Header :)</h1>
+  <div class="jumbotron bg-secondary text-center" id="jumbotron-welcome">
+    <h1 class="display-4">Welcome</h1>
+    <p class="lead w-50 mx-auto">This is the landing page for my final project, which consists of several websites and cool animations. Read on to find out more!</p>
+  </div>
 
+  <div class="p-3">
+    <p class="lead">Here you can find a small handful of relaxing screensavers, as well as a descriptive "about" page for Javascript learners. This set of web pages was created for CS 2350 at <a style="color: #7d56bf;" href="https://weber.edu/">Weber State University</a>. </p>
+  </div>
+
+
+  <!-- CAROUSEL -->
+  <h2 class="p-3">Featured</h2>
+  <div id="showcase-imgs" class="carousel slide carousel-fade mx-auto" style="max-width: 800px;" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="./images/scr_orbs.png" class="d-block w-100" alt="Orbs Screensaver">
+        <div class="carousel-caption d-none d-md-block">
+          <a href="orbs.html">Orbs</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="./images/scr_matrix.png" class="d-block w-100" alt="Matrix Screensaver">
+        <div class="carousel-caption d-none d-md-block">
+          <a href="matrix.html">Matrix</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="./images/scr_scene.png" class="d-block w-100" alt="Scene Screensaver">
+        <div class="carousel-caption d-none d-md-block">
+          <a href="scene.html">Scene</a>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#showcase-imgs" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#showcase-imgs" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  <div class="p-3">
+    <p>This site features three screensavers:</p>
+    <ul>
+      <li>Orbs</li>
+      <li>Matrix</li>
+      <li>Scene</li>
+    </ul>
+    <p>They can be found by using the navigation bar in the header or clicking in the image slide.</p>
+    <p>Each of the screensavers, while not exactly interactive, allows for some customization using forms. Feel free to play around with the sliders and checkboxes in each one and enjoy the effects.</p>
+  </div>
+
+
+  <footer></footer>
   <script src="javascripts/application.js" type="text/javascript"></script>
 </body>
 </html>

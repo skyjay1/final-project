@@ -10,35 +10,76 @@ console.log('loading javascript...')
 // insert the navigation bar into the header
 function insertHeader() {
   let header = document.querySelector('header')
-  header.innerHTML = (`
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark text-light">
-    <a class="navbar-brand" href="index.html">Pretty Screen</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="index.html">Home</a>
+  if(header) {
+    header.innerHTML = (`
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark text-light">
+      <a class="navbar-brand" href="index.html">Pretty Screen</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Screensavers
+            </a>
+            <div class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="orbs.html">Orbs</a>
+              <a class="dropdown-item" href="matrix.html">Matrix</a>
+              <a class="dropdown-item" href="scene.html">Scene</a>
+            </div>
+          </li>
+          <li class="nav-item">
+          <a class="nav-link" href="about.html">About</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Screensavers
-          </a>
-          <div class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="orbs.html">Orbs</a>
-            <a class="dropdown-item" href="matrix.html">Matrix</a>
-            <a class="dropdown-item" href="floating-text.html">Floating Text</a>
-            <a class="dropdown-item" href="scene.html">Scene</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  `)
-  console.log('inserted header navbar element')
+        </ul>
+      </div>
+    </nav>
+    `)
+    console.log('inserted header navbar element')
+  }
 }
 
+// insert the footer content at the bottom of the page
+function insertFooter() {
+  let footer = document.querySelector('footer')
+  if(footer) {
+    footer.innerHTML = `
+    <hr class="my-3 bg-light">
+    <img src="./images/skyjay1-logo.png" class="d-block mx-auto" style="max-width: 75px;" alt="Skyjay1 Logo">
+    <p class="mxw-75 mx-auto" style="max-width: 75px;">&copy; 2020</p>
+    `
+    console.log('inserted footer element')
+  }
+}
+
+// insert a description for the screensaver
+function insertDescription() {
+  let desc = document.getElementById('desc')
+  if(desc) {
+    let contents = desc.innerText
+    desc.innerHTML = `
+    <p class="text-md-right text-lg-center">
+    <a class="btn btn-secondary d-block d-md-inline-block mw-300" data-toggle="collapse" href="#description" role="button" aria-expanded="false">
+      Description
+    </a>
+    </p>
+    <div class="collapse mb-3" id="description">
+      <div class="card card-body bg-dark text-light border border-light">
+        <p class="my-0">${contents}</p>
+      </div>
+    </div>
+    `
+    console.log('inserted description')
+  }
+}
+
+/////////////////////////
+// CANVAS AND PAINTERS //
+/////////////////////////
 
 // functions that we will use for the canvas...
 let updateCanvasSize = function(cvs) {
@@ -52,9 +93,6 @@ let resetCanvas = function(cvs, context, style) {
   context.fillStyle = style;
   context.fillRect(0, 0, cvs.width, cvs.height)
 }
-//////////////
-// PAINTERS //
-//////////////
 
 /////////////////////
 //// ORB PAINTER ////
@@ -169,7 +207,6 @@ let orbPainter = {
   onFormChange: function(event) {
     // add or remove orbs based on new form input
     let nextNumOrbs = document.getElementById('orb-count').value
-    let diffNumOrbs = Math.abs(nextNumOrbs - numOrbs)
     while(numOrbs != nextNumOrbs) {
       if(nextNumOrbs > numOrbs) {
         orbs.push(makeOrb(cvs))
@@ -189,12 +226,12 @@ let orbPainter = {
 //// MATRIX PAINTER ////
 ////////////////////////
 let matrices = []
-let matrixBGColor = '#222'
-let matrixTextColor = '#66ff66'
-const textSize = 11
-const textStartY = -500
-const numChangeChance = 0.1
-const newMatrixChance = 0.08
+let matrixBGColor = '#222' // TODO link to form
+let matrixTextColor = '#66ff66' // TODO link to form
+let textSize = 11 // TODO link to form?
+let textStartY = -500
+let numChangeChance = 0.1 // TODO link to form?
+const newMatrixChance = 0.08 // TODO link to form?
 // functions we need
 let makeMatrix = function(cvs, ctx, atTop) {
   // determine values
@@ -237,7 +274,7 @@ let drawMatrix = function(cvs, ctx, m) {
 // the actual matrix painter
 let matrixPainter = {
   prepare: function(cvs, ctx) {
-    resetCanvas(cvs, ctx, '#222')
+    resetCanvas(cvs, ctx, matrixBGColor)
     // add a random number of matrices to begin with
     let numMatrices = 20 + Math.floor(Math.random() * 10)
     for(let i = 0; i < numMatrices; i++) {
@@ -245,7 +282,7 @@ let matrixPainter = {
     }
   },
   tick: function(cvs, ctx) {
-    resetCanvas(cvs, ctx, '#222')
+    resetCanvas(cvs, ctx, matrixBGColor)
     // move and draw all matrices
     for(let i in matrices) {
       let m = matrices[i]
@@ -264,7 +301,12 @@ let matrixPainter = {
     }
   },
   onFormChange: function(event) {
-    // TODO
+    matrixBGColor = document.getElementById('matrix-bg-color').value
+    matrixTextColor = document.getElementById('matrix-fg-color').value
+    textSize = document.getElementById('matrix-text-size').value
+    numChangeChance = document.getElementById('matrix-randomness').value * 0.01
+    textStartY = -45 * textSize;
+    
   }
 }
 
@@ -278,8 +320,8 @@ let matrixPainter = {
 let skyColors = [ '#87CEFA', '#F0F8FF' ]
 let groundColors = [ '#6E441F', '#422A15' ]
 let trees = []
-let numTrees = 24 // TODO link to form
-let numTreeLayers = 5 // TODO link to form
+let numTrees = 24
+let numTreeLayers = 5
 let groundHeight = 0
 let clouds = []
 const cloudW = 50
@@ -289,7 +331,7 @@ let cloudSpeed = 0.1
 let birds = []
 const birdW = 2
 const birdSpeed = 0.6
-const birdChance = 0.005 // TODO link to form
+let birdChance = 0.005
 
 // functions we will use
 let drawSky = function(cvs, ctx) {
@@ -323,10 +365,12 @@ let drawTree = function(cvs, ctx, x, y, bg) {
   ctx.fill();
 }
 let drawTrees = function(cvs, ctx) {
+  let disX = (cvs.width / numTrees)
+  disX += 4
   for(let h = 0; h < numTreeLayers; h++) {
     for(let i = 0; i < numTrees; i++) {
       let sectionHeight = (groundHeight + 50) / numTreeLayers
-      let x = (cvs.width / (numTrees - 3 * (h % 3))) * i
+      let x = (disX + (h % 3) * 8) * i
       let y = (cvs.height - groundHeight + sectionHeight * h) + (trees[h][i] % sectionHeight)
       drawTree(cvs, ctx, x, y, h % 2 == 1)
     }
@@ -353,15 +397,19 @@ let drawBird = function(cvs, ctx, b) {
   ctx.stroke()
 }
 let drawBirds = function(cvs, ctx) {
-  for(let i in birds) {
-    birds[i].x += birdSpeed
-    // remove birds that are no longer on the screen
-    if(birds[i].x + birdW > cvs.width) {
-      birds.splice(i, 1)
+  if(birdChance > 0.000) {
+    for(let i in birds) {
+      birds[i].x += birdSpeed
+      // remove birds that are no longer on the screen
+      if(birds[i].x + birdW > cvs.width) {
+        birds.splice(i, 1)
+      }
     }
-  }
-  for(let i in birds) {
-    drawBird(cvs, ctx, birds[i])
+    for(let i in birds) {
+      drawBird(cvs, ctx, birds[i])
+    }
+  } else {
+    birds = []
   }
 }
 let makeCloud = function(cvs, atRight) {
@@ -375,8 +423,9 @@ let makeCloud = function(cvs, atRight) {
 let drawCloud = function(cvs, ctx, cl) {
   ctx.fillStyle = '#ffffffaa'
   ctx.beginPath()
-  ctx.moveTo(cl.x, cl.y)
-  ctx.ellipse(cl.x, cl.y % (cvs.height - groundHeight - cloudH), cl.w, cl.h, 0, 0, 2 * Math.PI)
+  let yPos = cl.y % (cvs.height - groundHeight - cloudH)
+  ctx.moveTo(cl.x, yPos)
+  ctx.ellipse(cl.x, yPos, cl.w, cl.h, 0, 0, 2 * Math.PI)
   ctx.fill()
 }
 let drawClouds = function(cvs, ctx) {
@@ -399,9 +448,9 @@ let scenePainter = {
   prepare: function(cvs, ctx) {
     resetCanvas(cvs, ctx, 'white')
     // add trees
-    for(let i = 0; i < numTreeLayers; i++) {
+    for(let i = 0; i < 10; i++) {
       let tarray = []
-      for(let j = 0; j < numTrees; j++) {
+      for(let j = 0; j < 50; j++) {
         let y = 1000 * Math.random()
         tarray.push(y)
       }
@@ -435,7 +484,9 @@ let scenePainter = {
     }
   },
   onFormChange: function(event) {
-    // TODO
+    numTrees = document.getElementById('tree-count').value
+    numTreeLayers = document.getElementById('tree-density').value
+    birdChance = document.getElementById('bird-chance').value * 0.015
   }
 }
 
@@ -473,6 +524,8 @@ if(cvs != null && cvs.hasAttribute('id')) {
     updateCanvasSize(cvs)
     // prepare the current painter
     painter.prepare(cvs, ctx)
+    // insert description
+    insertDescription()
     // schedule update to the painter every 40 ms
     intervalVar = window.setInterval(function() {
       painter.tick(cvs, ctx)
@@ -496,11 +549,12 @@ let resetInterval = function() {
 // ALWAYS RUN THIS CODE //
 //////////////////////////
 
-////////////
-// HEADER //
-////////////
+///////////////////////
+// HEADER AND FOOTER //
+///////////////////////
 insertHeader()
-document.body.classList.add('bg-dark')
+insertFooter()
+document.body.classList.add('bg-dark', 'text-light')
 
 ///////////
 // FORMS //
@@ -516,3 +570,7 @@ function reloadOnChange(ids) {
 
 // ORBS //
 reloadOnChange(['orb-count', 'orb-colors', 'orb-dark-mode'])
+// MATRIX //
+reloadOnChange(['matrix-bg-color', 'matrix-fg-color', 'matrix-text-size', 'matrix-randomness'])
+// SCENE //
+reloadOnChange(['tree-count', 'tree-density', 'bird-chance'])
