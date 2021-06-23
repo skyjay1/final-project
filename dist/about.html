@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="stylesheets/application.css">
+  <title>About | Pretty Screen</title>
+</head>
+<body> 
+  <header>
+    <!-- Added by Javascript -->
+  </header>
+  <div class="jumbotron bg-secondary text-light" id="jumbotron-about">
+    <h1 class="display-4">About the Screensavers</h1>
+    <p class="lead">This page will explain how each of the various screensavers were made. This is meant for those techy people who are interested, so be prepared for some techy terms like "if-else-if statements" and "canvas 2d context"</p>
+  </div>
+
+  <!-- HOW IT'S SET UP -->
+  <div class="bg-dark text-light p-2">
+    <div class="row mb-3">
+      <div class="col-md d-none d-md-inline text-sm-right">
+        <img class="rounded" style="width: 450px;" src="https://images.unsplash.com/photo-1485856407642-7f9ba0268b51" alt="brown ceramic mug and computer">
+      </div>
+      <div class="col align-baseline">
+        <h2 class="p-2">How it's set up</h2>
+        <p class="p-2">While exploring Javascript's powerful object tools, I realized two things.</p>
+        <ol class="p-2 ml-3">
+          <li>Javascript does not support inheritance in the way I've used it in other languages</li>
+          <li>Javascript <em>does</em> support duck-typing.</li>
+        </ol>
+      </div>
+    </div>
+    
+    <!-- DUCK-TYPING -->
+    <p class="text-md-right text-lg-center">
+      <a class="btn btn-secondary d-block d-md-inline-block mw-300" data-toggle="collapse" href="#ducktyping" role="button" aria-expanded="false">
+      Duck-typing
+      </a>
+    </p>
+    <div class="collapse mb-3" id="ducktyping">
+      <div class="card card-body bg-dark text-light border border-light">
+        <div class="text-center mb-3">
+          <img style="max-width: 300px; width: 100%;" src="https://images.unsplash.com/photo-1528286810737-9abac5099300" alt="duck">
+        </div>
+        <p>The term "duck-typing" comes from the phrase "If it looks like a duck, and it quacks like a duck, then it is a duck." Javascript doesn't care if the object I gave it was defined as a "duck" before the program began (which is the case in most other formal languages). It only cares that, at the time of running the program, the object I gave it has the components it would expect from a duck.</p>
+        <p>If this doesn't make sense, that's alright. But it leads up to the next section, which describes how I re-used the same code to make multiple screensavers.</p>
+      </div>
+    </div>
+    <!-- PAINTERS -->
+    <p class="text-md-right text-lg-center">
+      <a class="btn btn-secondary d-block d-md-inline-block mw-300" data-toggle="collapse" href="#painters" role="button" aria-expanded="false">
+        Painters
+      </a>
+    </p>
+    <div class="collapse mb-3" id="painters">
+      <div class="card card-body bg-dark text-light border border-light">
+        <p>I wanted to re-use the same code to display multiple screensavers, refresh them multiple times per second, and update them whenever a form change on the page occurs. Rather than use a huge if-else statement with lots of duplicated code, I realized I could define one object for each screensaver with these three functions:</p>
+        <ol>
+          <li><code>prepare</code> - called when the page is first loaded, to prepare any objects that should initially appear</li>
+          <li><code>tick</code> - called about 25 times per second in order to simulate animation</li>
+          <li><code>onFormChange</code> - called whenever a form element updates in case it affects the screensaver</li>
+        </ol>
+        <p>Now I could make multiple objects - I called them "painters" - that would each have these three functions. That meant I only needed one set of if-else-if statements to determine which painter was active on the page, and then I could call the functions from a single place in the code.</p>
+        <p>"Duck-typing" comes into play here because, in theory, I could give the code <em>any</em> object as long as it has at least those three functions.</p>
+        <p>This isn't exactly a revolutionary idea, but I explain it here simply to address any curious users who don't want to pour through my tedious and messy Javascript.</p>
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- HOW IT WORKS -->
+  <div class="bg-dark text-light p-2">
+    <div class="row mb-3">
+      <div class="col-md d-none d-md-inline text-sm-right">
+        <img class="rounded" style="width: 450px;" src="https://images.unsplash.com/photo-1487611459768-bd414656ea10" alt="person typing at computer">
+      </div>
+      <div class="col align-baseline">
+        <h2 class="p-2">How it works</h2>
+        <p class="p-2">Here I explain the object-oriented approach that made each screensaver possible.</p>
+        <p class="p-2">There are other ways to accomplish what I did, and many of those alternatives are certainly better than my approach. In some instances, I purposely take the "long way around" in order to explore Javascript functionality.</p>
+      </div>
+    </div>
+    <p class="text-md-right text-lg-center">
+      <a class="btn btn-secondary d-block d-md-inline-block mw-300" data-toggle="collapse" href="#orbs" role="button" aria-expanded="false">
+      Orbs
+      </a>
+    </p>
+    <!-- ORBS -->
+    <div class="collapse mb-3" id="orbs">
+      <div class="card card-body bg-dark text-light border border-light">
+        <p>Here's a brief summary of what each major function does:</p>
+        <code>prepare</code> 
+        <p>When the page is first loaded, this function creates a Javascript Array of "orb" objects. Each orb has the following properties:</p>
+        <ul>
+          <li><code>x</code>: the x position on the screen</li>
+          <li><code>y</code>: the y position on the screen</li>
+          <li><code>r</code>: the radius of the orb</li>
+          <li><code>vX</code>: the x-velocity of the orb</li>
+          <li><code>vY</code>: the y-velocity of the orb</li>
+          <li><code>c</code>: the color of the orb (may be ignored)</li>
+        </ul>
+        <p>The number of orbs starts out at 10, but can be changed later in onFormChange</p>
+        <code>tick</code>
+        <p>First I go through the array of orbs and check for collisions with the wall and with other orbs. When I wrote the code, I had the idea of orbs bouncing off each other with a speed relative to their size - bigger orbs would bounce less, smaller orbs would bounce more. </p>
+        <p>I wrote the following code on a whim and was surprised to find that it worked exactly how I wanted:</p>
+<pre class="text-light">let ratio = 0.015 * (orb2.r / orb1.r)
+orb1.vX += (orb1.x - orb2.x) * ratio
+orb1.vY += (orb1.y - orb2.y) * ratio</pre>
+        <p>Actually, that's not completely true. In the code above I set the ratio proportional to <code class="text-light">(orb2.r / orb1.r)</code> but originally I had it set proportional to <code class="text-light">(orb<span class="text-warning">1</span>.r / orb<span class="text-warning">2</span>.r)</code>, which resulted in large orbs bouncing around like rockets and small orbs taking huge blows without budging. Simply switching the two terms fixed it.</p>
+        <p>Anyway, after doing all the fancy math and updating positions, the last thing the tick function does is actually draw the orbs in their respective positions.</p>
+        <canvas id="orb-demo" width="100px" height="100px" class="mx-auto">
+          <script>
+            let drawOrb = function(cvs, ctx, radius, color) {
+              let x = cvs.width / 2
+              let y = cvs.height / 2
+              ctx.fillStyle = color
+              ctx.shadowColor = color
+              ctx.shadowBlur = 20
+              ctx.beginPath()
+              ctx.moveTo(x, y)
+              ctx.arc(x, y, radius, 0, 2 * Math.PI)
+              ctx.fill()
+            }
+            // call the function
+            let cvs = document.getElementById("orb-demo");
+            let ctx = cvs.getContext("2d");
+            drawOrb(cvs, ctx, cvs.width / 4, 'pink')
+          </script>
+        </canvas>
+        <code>onFormChange</code>
+        <p>The orb screensaver allows for some customization. Specifically, the user can determine these three things:</p>
+        <ol>
+          <li>The number of orbs on the screen</li>
+          <li>Whether or not the orbs are randomly colored</li>
+          <li>Whether or not the screen is in "dark mode"</li>
+        </ol>
+        <p>Whenever any of these fields change, this function is called. The color of each orb is determined by both point 2 and point 3 - it may be random, black, or white. The shadow is always the same color.</p>
+      </div>
+    </div>
+    <!-- MATRIX -->
+    <p class="text-md-right text-lg-center">
+      <a class="btn btn-secondary d-block d-md-inline-block mw-300" data-toggle="collapse" href="#matrix" role="button" aria-expanded="false">
+      Matrix
+      </a>
+    </p>
+    <div class="collapse mb-3" id="matrix">
+      <div class="card card-body bg-dark text-light border border-light">
+        <p>Here's a brief summary of what each major function does:</p>
+        <code>prepare</code>
+        <p>First, the painter creates between 20 and 30 "matrix" objects to fill the screen. Each object has the following properties:</p>
+        <ul>
+          <li><code>x</code>: the x-position of the matrix on the screen</li>
+          <li><code>y</code>: the y-position of the matrix on the screen</li>
+          <li><code>d</code>: the depth or z-position of the matrix on the screen</li>
+          <li><code>t</code>: the text to display
+          </li>
+        </ul>
+        <code>tick</code>
+        <p>Here, the painter updates the position of each "matrix" and then draws its text to the screen. The depth is used to determine both the text size to use and the speed at which the matrix object "falls" toward the bottom of the screen.</p>
+        <p>While drawing each matrix, every character in its text has a random chance to be changed, which gives the "flickering" effect. The other effects, like the fading colors and eerie glow, are simply text shadows and transparent colors.</p>
+        <code>onFormChange</code>
+        <p>The matrix screensaver has a few customizable properties:</p>
+        <ol>
+          <li>The color of the background</li>
+          <li>The color of the text</li>
+          <li>The randomness of number flickering</li>
+        </ol>
+      </div>
+    </div>
+    <!-- SCENE -->
+    <p class="text-md-right text-lg-center">
+      <a class="btn btn-secondary d-block d-md-inline-block mw-300" data-toggle="collapse" href="#scene" role="button" aria-expanded="false">
+      Scene
+      </a>
+    </p>
+    <div class="collapse mb-3" id="scene">
+      <div class="card card-body bg-dark text-light border border-light">
+        <p>Here's a brief summary of what each major function does:</p>
+        <code>prepare</code>
+        <p>This function creates an array of objects to represent trees, clouds, and birds. Well, sort of. In order to become closer together when the screen changes size, instead of clipping outside of the screen, the trees are actually stored as a large list of random y-positions numbers. The x-position is simply a ratio of the number of trees to the available screen width.
+        </p><p>Not a smooth solution, but it ensures that all the trees fit on the screen with a bit of randomness in their positions. The clouds and birds, though, are objects.</p>
+        <p>Clouds have only four properties: x-position, y-position, width, and height.</p>
+        <p>Birds have only two properties: x-position and y-position.</p>
+        <code>tick</code>
+        <p>The tick function updates the position of each cloud and each bird. It then draws the <strong>sky, clouds, birds, ground, and trees</strong> to the screen, in that order.</p>
+        <p>The birds are interesting. To get a smooth up-and-down flapping effect, their wings are drawn using a sinusoidal function. That code looks something like this:</p>
+<pre class="text-light">let wingSpeed = 0.6 // smaller numbers = slower
+let wingSpan = 10 // number of pixels
+let wingY = bird.y + Math.sin(bird.x * wingSpeed) * wingSpan</pre>
+        <canvas id="bird-demo" width="100px" height="100px" class="mx-auto">
+          <script>
+            let ticks = 0
+            let drawBird = function(cvs, ctx) {
+              let x = cvs.width / 2
+              let y = cvs.height / 2
+              let wingSpeed = 0.15
+              let wingSpan = cvs.height * 0.2
+              let wingY = y + Math.sin(ticks * wingSpeed) * wingSpan
+              ticks++
+              ctx.fillStyle = 'lightgray'
+              ctx.fillRect(0, 0, cvs.width, cvs.height)
+              ctx.fillStyle = 'black'
+              ctx.beginPath()
+              ctx.moveTo(x - wingSpan, wingY)
+              ctx.lineTo(x, y)
+              ctx.lineTo(x + wingSpan, wingY)
+              ctx.stroke()
+            }
+            // register the canvas painting interval
+            cvs = document.getElementById("bird-demo");
+            ctx = cvs.getContext("2d");
+            window.setInterval(function() {
+              drawBird(cvs, ctx)
+            }, 40);
+          </script>
+        </canvas>
+        <p>This is an animation trick I learned from my 3d object modeling experience, where the <code>wingSpeed</code> affects how long it takes for the sin function to complete and the <code>wingSpan</code> affects how large of an angle is generated.</p>
+        <p>To create a smooth animation, I just need to give it a number that constantly increases. In this case, the bird's x-position works nicely.</p>
+        <code>onFormChange</code>
+        <p>When a form changes, the screensaver updates the following properties:</p>
+        <ol>
+          <li>The number of trees in each row</li>
+          <li>The number of rows of trees</li>
+          <li>The percent chance that a bird will appear every tick</li>
+        </ol>
+        <p>If the user turns that last option up all the way, they get a locust-like swarm of birds that darkens the sky. Pretty scary stuff.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <footer></footer>
+  <script src="javascripts/application.js" type="text/javascript"></script>
+</body>
+</html>
